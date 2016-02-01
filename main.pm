@@ -374,6 +374,9 @@ sub load_inst_tests() {
         elsif (get_var("LVM")) {
             loadtest "installation/partitioning_lvm.pm";
         }
+        elsif (get_var("NFSROOT")) {
+            loadtest "installation/partitioning_nfs.pm";
+        }
         if (get_var("FILESYSTEM")) {
             loadtest "installation/partitioning_filesystem.pm";
         }
