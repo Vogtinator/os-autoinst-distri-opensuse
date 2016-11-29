@@ -87,6 +87,10 @@ sub run() {
     if (get_var('NFSSERVER')) {
         # Server is up and running, client can use it now!
         mutex_create('nfs_ready');
+        # Wait until dependent tests are done.
+        # Theoretically, this could be done after all other tests run,
+        # but one of those might change network settings.
+        wait_for_children
     }
 }
 

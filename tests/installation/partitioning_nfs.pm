@@ -25,7 +25,6 @@ sub run() {
     # Select / partition
     send_key 'alt-s';
     send_key 'down';
-    send_key 'ret';
     assert_screen 'partition-part-slash';
     send_key 'tab';
     send_key 'down';
@@ -34,31 +33,32 @@ sub run() {
 
     # Change / on btrfs to /boot on ext4
     send_key 'alt-e';
-    assert_screen 'partition-part-btrfs';
+    assert_screen 'partition-part-edit';
     send_key 'alt-s';
     send_key 'down';
     send_key 'down';
     send_key 'down'; # Select ext4
-    send_key 'ret';
     send_key 'alt-m';
-    type_string 'boot';
-    send_key 'alt-f', 1;
+    type_string '/boot';
+    send_key 'alt-f';
+    assert_screen 'partition-system-view';
 
     # Go to NFS view
-    send_key 'alt-s', 1;
-    send_key 'down', 1;
-    send_key 'down', 1;
-    send_key 'down', 1;
-    send_key 'down', 1;
-    send_key 'down', 1;
-    send_key 'ret';
+    # sleep 1 is required as it doesn't react to key
+    # events while switching the view
+    send_key 'alt-s';# sleep 1;
+    send_key 'down';# sleep 1;
+    send_key 'down';# sleep 1;
+    send_key 'down';# sleep 1;
+    send_key 'down';# sleep 1;
+    send_key 'down';# sleep 1;
 
     # Wait for NFS server to be ready
     mutex_lock 'nfs_ready';
 
     # Add mount
     assert_screen 'partition-nfs-overview';
-    send_key 'alt-a';
+    send_key 'alt-d';
     assert_screen 'partition-nfs-mountpoint';
     type_string '10.0.2.1';
     send_key 'alt-r';
@@ -69,9 +69,9 @@ sub run() {
     send_key 'alt-o', 1;
 
     # Finish
-    send_key 'alt-c';
+    send_key 'alt-a';
     assert_screen 'partition-unformatted';
-    send_key 'alt-y', 1;
+    send_key 'alt-y';
 }
 
 1;
