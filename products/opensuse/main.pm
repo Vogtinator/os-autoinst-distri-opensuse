@@ -420,7 +420,12 @@ else {
         load_boot_tests();
         loadtest "installation/finish_desktop";
         if (get_var('LIVE_INSTALLATION')) {
-            loadtest "installation/live_installation";
+            if (kdestep_is_applicable) {
+                loadtest "installation/kde_live_installation";
+            }
+            elsif (gnomestep_is_applicable()) {
+                loadtest "installation/gnome_live_installation";
+            }
             load_inst_tests();
             load_reboot_tests();
             return 1;
