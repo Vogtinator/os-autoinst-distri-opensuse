@@ -35,7 +35,10 @@ sub run {
 
     select_console 'root-console';
     pkcon_quit;
-    zypper_call('in salt-master salt-minion');
+    my $master_installed = script_run('rpm -q --whatprovides salt-master') == 0;
+    my $minion_installed = script_run('rpm -q --whatprovides salt-minion') == 0;
+    zypper_call('in salt-master') unless $master_installed;
+    zypper_call('in salt-minion') unless $minion_installed;
     my $cmd = <<'EOF';
 systemctl start salt-master
 systemctl status --no-pager salt-master
@@ -53,6 +56,10 @@ EOF
         assert_script_run 'for i in {1..7}; do echo "try $i" && salt \'*\' test.ping -t30 && break; done';
     }
     systemctl 'stop salt-master salt-minion', timeout => 120;
+
+    # Remove again if it was installed by this module
+    zypper_call('rm -u salt-master') unless $master_installed;
+    zypper_call('rm -u salt-minion') unless $minion_installed;
 }
 
 1;
