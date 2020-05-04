@@ -2081,7 +2081,7 @@ sub load_x11_remote {
         loadtest 'x11/remote_desktop/xrdp_server';
     }
     elsif (check_var('REMOTE_DESKTOP_TYPE', 'xrdp_client')) {
-        loadtest 'x11/remote_desktop/xrdp_client';
+        loadtest 'x11/remote_desktop/remmina';
     }
     elsif (check_var('REMOTE_DESKTOP_TYPE', 'win_server')) {
         loadtest 'x11/remote_desktop/windows_network_setup';
