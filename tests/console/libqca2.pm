@@ -27,8 +27,7 @@ use version_utils qw(is_sle is_leap is_tumbleweed);
 use registration qw(add_suseconnect_product register_product);
 
 sub run {
-    my $self = shift;
-    $self->select_serial_terminal;
+    select_console 'root-console';
     if (is_tumbleweed || is_leap) {
         zypper_call("in libqca-qt5 libqca-qt5-devel", timeout => 600);
     } else {

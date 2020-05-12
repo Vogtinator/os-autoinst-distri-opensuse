@@ -36,9 +36,7 @@ sub wait_serial_or_die {
 
 
 sub run {
-    my $self = shift;
-    $self->select_serial_terminal;
-
+    select_console("root-console");
     zypper_call('in gcc glibc-devel gdb');    #Install test dependencies.
 
     #Test Case 1

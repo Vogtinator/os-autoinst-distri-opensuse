@@ -32,7 +32,7 @@ use version_utils qw(is_upgrade is_sle is_tumbleweed is_leap);
 
 sub run {
     my $self = shift;
-    $self->select_serial_terminal;
+    select_console 'root-console';
 
     # new user to test sshd
     my $ssh_testman        = "sshboy";
