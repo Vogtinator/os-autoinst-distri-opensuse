@@ -48,7 +48,8 @@ sub run {
         assert_and_click 'live-upgrade';
     }
     else {
-        assert_and_click 'live-installation';
+        assert_screen('live-installation');
+        click_lastmatch(clicktime => 0.01);
     }
     assert_and_click 'maximize';
     mouse_hide;
