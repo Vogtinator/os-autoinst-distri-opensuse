@@ -125,7 +125,7 @@ sub run {
 
     my $mouse_x = 1;
     while (1) {
-        die 'timeout hit on during await_install' if $timeout <= 0;
+        assert_screen \@tags, 30 if $timeout <= 0;
         my $ret = check_screen \@tags, 30;
         $timeout -= 30;
         diag("left total await_install timeout: $timeout");
