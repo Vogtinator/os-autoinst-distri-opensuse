@@ -20,6 +20,8 @@ use testapi;
 sub run {
     my ($self) = @_;
     $self->check_desktop_runner;
+
+x11_start_program('sudo sh -c "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus su linux -c dbus-monitor >> /dev/ttyS0 & disown"', valid => 0);
 }
 
 1;
