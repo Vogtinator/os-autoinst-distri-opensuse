@@ -24,7 +24,7 @@ sub run {
     # Make sure everything necessary is installed
     ensure_installed "plasma5-session-wayland";
 
-    x11_start_program('sudo sh -c "echo KWIN_XWAYLAND_DEBUG=1 >> /etc/environment"', valid => 0);
+    x11_start_program('mkdir ~/data; sudo sh -c "echo KWIN_XWAYLAND_DEBUG=1 >> /etc/environment"', valid => 0);
 
     # Log out of X session
     send_key 'super';    # Open the application menu
