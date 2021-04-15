@@ -1225,6 +1225,7 @@ sub load_consoletests {
     if (check_var_array('SCC_ADDONS', 'tcm') && get_var('PATTERNS') && is_sle('<15') && !get_var("MEDIA_UPGRADE")) {
         loadtest "feature/feature_console/deregister";
     }
+    loadtest 'console/live_media_checks' if get_var('LIVECD') && get_var('USBSIZEGB');
     loadtest 'console/orphaned_packages_check' if is_jeos || get_var('UPGRADE') || get_var('ZDUP') || !is_sle('<12-SP4');
     loadtest "console/consoletest_finish";
 }
