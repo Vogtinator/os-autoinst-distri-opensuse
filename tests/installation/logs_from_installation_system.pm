@@ -34,7 +34,7 @@ sub run {
     my ($self) = @_;
     my $dasd_path = get_var('DASD_PATH', '0.0.0150');
     select_console 'install-shell';
-
+die "committing sudoku";
     # check for right boot-device on s390x (zVM, DASD ONLY)
     if (check_var('BACKEND', 's390x') && !check_var('S390_DISK', 'ZFCP')) {
         if (script_run("lsreipl | grep $dasd_path")) {
