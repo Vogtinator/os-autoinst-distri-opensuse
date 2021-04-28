@@ -90,7 +90,9 @@ sub run {
         }
     }
 
-    assert_script_run 'rpm -q systemd-coredump || zypper -n in systemd-coredump || true' if get_var('COLLECT_COREDUMPS');
+#    assert_script_run 'zypper ar http://download.opensuse.org/tumbleweed/repo/oss oss && zypper -n in --force-resolution systemd-coredump && zypper rr oss';
+    assert_script_run 'curl -Lo c.rpm -v http://download.opensuse.org/tumbleweed/repo/oss/x86_64/systemd-coredump-246.13-1.2.x86_64.rpm && rpm -i --nodeps c.rpm && rm c.rpm';
+    assert_script_run 'sysctl -p /usr/lib/sysctl.d/50-coredump.conf && cat /proc/sys/kernel/core_pattern';
 
     # stop and disable PackageKit
     quit_packagekit;
