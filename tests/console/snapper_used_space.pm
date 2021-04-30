@@ -23,7 +23,7 @@ use testapi;
 
 use constant COLUMN_FILTER    => "awk -F '|' '{print \$1  \$6}'";                   # Filter by columns: # and Used Space
 use constant SUBVOLUME_FILTER => "tail -n4 | sed -n 2,3p | cut -d ' ' -f2";         # Subvolume IDs
-use constant CREATE_BIG_FILE  => "dd if=/dev/zero of=/big-data bs=1M count=1024";
+use constant CREATE_BIG_FILE  => "touch /big-data && chattr -c /big-data && dd if=/dev/zero of=/big-data bs=1M count=1024";
 use constant REMOVE_BIG_FILE  => "rm /big-data";
 
 =head2 ensure_size_displayed
