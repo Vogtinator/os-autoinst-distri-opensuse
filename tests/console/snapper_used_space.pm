@@ -49,6 +49,7 @@ sub query_space_single_snapshot {
     assert_script_run 'snapper list | tail -n1 | ' . COLUMN_FILTER . ' | grep KiB';
     # Remove file
     assert_script_run REMOVE_BIG_FILE;
+    script_run 'snapper list';
     # Check data is exclusive to that snapshot and used space grows 1GiB
     assert_script_run 'snapper list | tail -n1 | ' . COLUMN_FILTER . ' | grep \'1.00 GiB\'';
 }
