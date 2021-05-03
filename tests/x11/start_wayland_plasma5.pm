@@ -21,6 +21,11 @@ use x11utils 'handle_login';
 sub run {
     my ($self) = @_;
 
+    select_console 'root-console';
+    assert_script_run('rpm -Uvh --nosignature https://api.opensuse.org/public/build/home:Vogtinator:krunnerdbg/openSUSE_Factory/x86_64/kwayland-integration/kwayland-integration-5.21.80git.20210503T103208~1f8140f-ku.8.1.x86_64.rpm');
+
+    select_console 'x11';
+
     # Make sure everything necessary is installed
     ensure_installed "plasma5-session-wayland";
 
