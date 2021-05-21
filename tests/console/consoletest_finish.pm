@@ -53,6 +53,7 @@ sub run {
     save_screenshot();
 
     if (!check_var("DESKTOP", "textmode")) {
+        print("X11 VT is:" . console("x11")->{args}->{tty} . "\n");
         select_console('x11', await_console => 0);
         ensure_unlocked_desktop;
     }

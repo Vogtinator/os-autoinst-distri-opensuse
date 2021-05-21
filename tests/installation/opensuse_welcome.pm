@@ -20,6 +20,7 @@ use x11utils 'handle_welcome_screen';
 
 sub run {
     handle_welcome_screen;
+    print("X11 VT is:" . console("x11")->{args}->{tty} . "\n");
 }
 
 sub test_flags {
