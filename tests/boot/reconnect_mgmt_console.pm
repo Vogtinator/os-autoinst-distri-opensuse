@@ -14,7 +14,9 @@
 use strict;
 use warnings;
 use base "installbasetest";
+use testapi;
 use utils 'reconnect_mgmt_console';
+use version_utils qw(is_sle is_leap);
 
 sub run {
     reconnect_mgmt_console;

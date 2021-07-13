@@ -1383,6 +1383,36 @@ sub reconnect_mgmt_console {
                 my $ret = $@;
                 _handle_login_not_found($ret);
             }
+
+    if (!is_sle && !is_leap) {
+        # Enable root login over SSH
+        my $ssh = Net::SSH2->new;
+        # Retry multiple times, in case of the guest is not running yet
+        my $counter = $bmwqemu::vars{SSH_CONNECT_RETRY} // 5;
+        while ($counter > 0) {
+            if ($ssh->connect("s390linux" . get_required_var('S390_HOST'))) {
+                $ssh->auth(username => $testapi::username, password => $testapi::password);
+                bmwqemu::diag "SSH connection established" if $ssh->auth_ok;
+                last;
+            }
+            else {
+                bmwqemu::diag "Could not connect, retrying after some seconds...";
+                sleep($bmwqemu::vars{SSH_CONNECT_RETRY_INTERVAL} // 10);
+                $counter--;
+                next;
+            }
+        }
+        die "SSH connection failed" unless $ssh->auth_ok;
+        $ssh->timeout(1000);
+
+        my $chan = $ssh->channel();
+        $chan->exec("su root -c 'mkdir -p /etc/ssh/sshd_config.d && echo PermitRootLogin yes > /etc/ssh/sshd_config.d/root.conf && systemctl restart sshd'");
+        $chan->write($testapi::password . "\n");
+        $chan->wait_closed();
+
+        $ssh->disconnect();
+    }
+
             reset_consoles;
 
             # reconnect the ssh for serial grab
