@@ -150,6 +150,7 @@ sub activate_kdump {
     # get kdump memory size bsc#1161421
     my $memory_total = script_output('kdumptool  calibrate | awk \'/Total:/ {print $2}\'');
     my $memory_kdump = $memory_total >= 2048 ? 1024 : 320;
+    assert_script_run(q(sed -i 's/KDUMP_COMMANDLINE_APPEND=""/KDUMP_COMMANDLINE_APPEND="earlycon earlyprintk debug verbose loglevel=9"/' /etc/sysconfig/kdump));
     my $module_name  = y2_module_consoletest::yast2_console_exec(yast2_module => 'kdump', yast2_opts => '--ncurses');
     my @initial_tags = qw(yast2-kdump-disabled yast2-kdump-enabled);
     push(@initial_tags,
