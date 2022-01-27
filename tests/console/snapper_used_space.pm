@@ -45,6 +45,8 @@ sub query_space_single_snapshot {
     assert_script_run 'snapper list | tail -n1 | ' . COLUMN_FILTER . ' | grep KiB';
     # Remove file
     assert_script_run REMOVE_BIG_FILE;
+    # Wait until the quotas got calculated (s.a. boo#1192630)
+    assert_script_run "btrfs quota rescan -w .";
     # Check data is exclusive to that snapshot and used space grows 1GiB
     assert_script_run 'snapper list | tail -n1 | ' . COLUMN_FILTER . ' | grep \'1.00 GiB\'';
 }
@@ -61,6 +63,8 @@ sub query_space_several_snapshot {
         # Create two pair of pre- and post- snapshots
         assert_script_run "snapper create --command $command --description $description $args";
     }
+    # Wait until the quotas got calculated (s.a. boo#1192630)
+    assert_script_run "btrfs quota rescan -w .";
     # Check that correct used space does not show up in any of the snapshots.
     assert_script_run 'snapper list | tail -n4 | ' . COLUMN_FILTER . ' | grep KiB';
     # Filter snapshots containing the data (intermediate ones)
