@@ -15,7 +15,7 @@ use testapi;
 use utils 'assert_screen_with_soft_timeout';
 
 sub run {
-    x11_start_program 'dolphin';
+    x11_start_program('WAYLAND_DEBUG=1 dolphin', target_match => "dolphin");
 
     # Go to ~/Documents
     assert_and_click 'dolphin_icon_documents';
