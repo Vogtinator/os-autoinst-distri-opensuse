@@ -5,6 +5,7 @@
 
 package windowsbasetest;
 use Mojo::Base qw(basetest);
+use Utils::Architectures qw(is_aarch64);
 use testapi;
 
 sub windows_run {
@@ -74,7 +75,7 @@ sub open_powershell_as_admin {
         assert_screen 'powershell-as-admin-window', timeout => 240;
         assert_and_click 'window-max';
         wait_still_screen stilltime => 3, timeout => 12;
-        _setup_serial_device unless (exists $args{no_serial});
+        _setup_serial_device unless (exists $args{no_serial}) || is_aarch64;
     }
 }
 
@@ -88,10 +89,10 @@ sub run_in_powershell {
         wait_screen_change(sub { send_key 'ret' }, 10);
         $args{code}->();
         send_key 'ctrl-l';
-    } elsif (get_var('QAM_WINDOWS_SERVER')) {
+    } elsif (get_var('QAM_WINDOWS_SERVER') || is_aarch64) {
         save_screenshot;
         wait_screen_change(sub { send_key 'ret' }, 10);
-        assert_screen($args{tags});
+        assert_screen($args{tags}) if $args{tags};
         return;
     } else {
         type_string ';$port.WriteLine(\'' . $rc_hash . '\' + $?)', max_interval => 125;
