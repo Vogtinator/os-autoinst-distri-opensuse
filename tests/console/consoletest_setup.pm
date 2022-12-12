@@ -20,7 +20,7 @@
 use base "consoletest";
 use testapi;
 use serial_terminal 'select_serial_terminal';
-use utils qw(check_console_font disable_serial_getty);
+use utils qw(check_console_font disable_serial_getty zypper_call);
 use Utils::Backends qw(has_ttys);
 use Utils::Systemd qw(disable_and_stop_service systemctl);
 use Utils::Logging 'export_logs';
@@ -66,6 +66,10 @@ sub run {
     script_run 'echo "set -o pipefail" >> /etc/bash.bashrc.local';
     script_run '. /etc/bash.bashrc.local';
     disable_and_stop_service('packagekit.service', mask_service => 1);
+
+    zypper_call 'in perf';
+    assert_script_run 'stty -F /dev/hvc1 rows 60 cols 120';
+    background_script_run 'TERM=linux perf top -g --fields overhead,pid,comm,dso </dev/hvc1 &> /dev/hvc1';
 
     # switch to root console and print the current console font to stdout
     # make a use of selected root-console in check_console_font to apply
