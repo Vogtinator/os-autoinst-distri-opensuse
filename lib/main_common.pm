@@ -1390,7 +1390,6 @@ sub load_x11tests {
     }
     if (kdestep_is_applicable()) {
         if (!get_var('LIVECD')) {
-            loadtest "x11/plasma_browser_integration";
             loadtest "x11/khelpcenter";
         }
         if (get_var("PLASMA5")) {
@@ -1618,6 +1617,9 @@ sub load_extra_tests_desktop {
     }
     if (get_var("DESKTOP") =~ /kde|gnome/) {
         loadtest "x11/libqt5_qtbase" if (is_sle("12-SP3+") || is_opensuse);
+    }
+    if (kdestep_is_applicable()) {
+        loadtest "x11/plasma_browser_integration";
     }
     # the following tests care about network and need some DE specific
     # needles. For now we only have them for gnome and do not want to
