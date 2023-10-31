@@ -45,7 +45,10 @@ sub run {
             cmd => 'Disable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-Hypervisor -NoRestart',
             timeout => 60
         );
-    } else {
+    }
+
+    if (!get_var('WSL2') || is_aarch64) {
+        # Workaround: The AArch64 .appx uses an x86 .exe still, but the x86 WSL API is only available with this feature.
         # WSL1 will still be enabled in the legacy mode
         $self->run_in_powershell(
             cmd => 'Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart',
