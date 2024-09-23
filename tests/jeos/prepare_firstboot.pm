@@ -21,6 +21,8 @@ sub run {
     my $distripassword = $testapi::password;
     my $reboot_for_jeos_firstboot = 1;
 
+    diag("prepare_firstboot: distripw: $distripassword");
+
     my $is_generalhw_via_ssh = is_generalhw && !defined(get_var('GENERAL_HW_VNC_IP'));
 
     if (get_var('GENERAL_HW_VIDEO_STREAM_URL')) {

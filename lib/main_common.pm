@@ -147,6 +147,7 @@ sub load_testdir {
 }
 
 sub set_defaults_for_username_and_password {
+    diag("set_defaults_for_username_and_password called. u: $testapi::username p: $testapi::password");
     if (get_var("LIVETEST")) {
         $testapi::username = "root";
         $testapi::password = '';
@@ -168,6 +169,7 @@ sub set_defaults_for_username_and_password {
         $testapi::username = "linux";    # LiveCD account
         $testapi::password = "";
     }
+    diag("set_defaults_for_username_and_password done. u: $testapi::username p: $testapi::password");
 }
 
 sub setup_env {
