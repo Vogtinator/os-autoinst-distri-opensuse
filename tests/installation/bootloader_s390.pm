@@ -308,6 +308,11 @@ sub format_dasd {
         die "dasdfmt died with exit code $r" unless (defined($r) && $r == 0);
     }
 
+    if (get_var("BOOT_HDD_IMAGE")) {
+        assert_script_run("curl " . autoinst_url("/assets/hdd/" . get_required_var("HDD_1")) . " | xz -cd | dd bs=1M status=progress oflag=sync of=/dev/dasda");
+        assert_script_run("chreipl /dev/dasda");
+    }
+
     # until Agama get better UI for DASD, activation will be done via parmfile (bsc#1238891#c9)
     unless (is_agama) {
         # bring DASD down again to test the activation during the installation
@@ -358,6 +363,12 @@ sub run {
     # format DASD before installation by default
     format_dasd if (check_var('FORMAT_DASD', 'pre_install') && !get_var('INST_AUTO') && !get_var('INST_DUD'));
     create_encrypted_part_dasd if get_var('ENCRYPT_ACTIVATE_EXISTING');
+
+    if (get_var('BOOT_HDD_IMAGE')) {
+        prepare_system_shutdown;
+        enter_cmd("reboot -f");
+        return;
+    }
 
     select_console("installation", timeout => 180);
 
