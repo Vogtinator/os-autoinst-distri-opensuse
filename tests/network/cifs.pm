@@ -37,6 +37,7 @@ sub setup_local_server() {
     assert_script_run("chown -R geekotest /srv/samba/{currywurst,filedrop}");
     assert_script_run("chmod -R 0755 /srv/samba/currywurst");
     assert_script_run("chmod -R 0750 /srv/samba/filedrop");
+    assert_script_run("bash -x /usr/share/samba/update-samba-security-profile 2>/dev/hvc0");
     systemctl("start smb");
     assert_script_run("systemctl status smb | grep 'active (running)'");
     assert_script_run('echo -ne \'nots3cr3t\nnots3cr3t\' | smbpasswd -a -s geekotest');
