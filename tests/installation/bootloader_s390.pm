@@ -129,16 +129,18 @@ sub get_to_yast {
     }
     die "Download of Kernel or Initrd took too long (with retries)" unless $r;
 
-    # Set line length to record length (132 characters)
-    $s3270->sequence_3270("String(\"SET TRUNC 132\")", "ENTER",);
-    $r = $s3270->expect_3270(output_delim => qr/Trunc=132/, buffer_ready => qr/X E D I T/);
+    $s3270->sequence_3270(qw( String(INPUT) ENTER ));
 
-    # Enter Power Typing mode
-    $s3270->sequence_3270("String(POWER)", "ENTER", "Wait(InputField)",);
-    $r = $s3270->expect_3270(output_delim => qr/P o w e r   T y p i n g/, buffer_ready => qr//);
+    $r = $s3270->expect_3270(buffer_ready => qr/Input-mode/);
 
-    # Type in file content as one long line, xedit will wrap it
-    $s3270->sequence_3270("String(\"$params\")", "ENTER", "ENTER",);
+    # Split into 80 characters exactly, the record separator
+    # won't be visible in the used cmdline
+    foreach my $chunk (unpack("(a80)*", $params)) {
+        $s3270->sequence_3270("String(\"$chunk\")", "ENTER",);
+    }
+
+    $s3270->sequence_3270("ENTER", "ENTER",);
+
     $r = $s3270->expect_3270(buffer_ready => qr/X E D I T/);
 
     ## Remove the "manual=1" and the empty line at the end
