@@ -129,19 +129,36 @@ sub get_to_yast {
     }
     die "Download of Kernel or Initrd took too long (with retries)" unless $r;
 
+    # Split the parameters into 79 character + 1 character pairs.
+    # The input mode can handle 79 characters per line, the last one
+    # is handled later.
+    my @param_pairs = unpack('(a79a1)*', $params);
+
     $s3270->sequence_3270(qw( String(INPUT) ENTER ));
 
     $r = $s3270->expect_3270(buffer_ready => qr/Input-mode/);
 
-    # Split into 80 characters exactly, the record separator
-    # won't be visible in the used cmdline
-    foreach my $chunk (unpack("(a80)*", $params)) {
-        $s3270->sequence_3270("String(\"$chunk\")", "ENTER",);
+    my $sequence = '';
+    for (my $i = 0; $i < @param_pairs; $i += 2) {
+        my $line_start = $param_pairs[$i];
+        $sequence .= "String(\"$line_start\")\n";
     }
 
-    $s3270->sequence_3270("ENTER", "ENTER",);
+    $sequence .= "ENTER\nENTER\n";
+
+    $s3270->sequence_3270(split /\n/, $sequence);
 
     $r = $s3270->expect_3270(buffer_ready => qr/X E D I T/);
+
+    # Now input the remaining 1 character at column 80 of each line
+    # manually using clocate :80 and creplace
+    $s3270->sequence_3270("String(\"clocate :80\")", "ENTER",);
+    for (my $i = 1; $i < @param_pairs; $i += 2) {
+        my $lineno = int($i / 2) + 1;
+        my $line_end = $param_pairs[$i] // ' ';
+        next if ($line_end eq ' ' || $line_end eq '');
+        $s3270->sequence_3270("String(\"l :$lineno\")", "ENTER", "String(\"creplace $line_end\")", "ENTER",);
+    }
 
     ## Remove the "manual=1" and the empty line at the end
     ## of the parmfile.
