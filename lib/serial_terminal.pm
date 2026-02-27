@@ -151,8 +151,8 @@ sub set_serial_prompt {
     enter_cmd('export PAGER=cat TERM=dumb; stty cols 2048; exec $SHELL') if (is_sle('>=16') && is_s390x);
     die "Invalid prompt string '$serial_term_prompt'"
       unless $serial_term_prompt =~ s/\s*$//r;
-    enter_cmd(qq/PS1="$serial_term_prompt"/);
-    wait_serial(qq/PS1="$serial_term_prompt"/, no_regex => 1);
+    enter_cmd(qq/PS1="$serial_term_prompt"; PS2=/);
+    wait_serial(qq/PS1="$serial_term_prompt"; PS2=/, no_regex => 1);
     $testapi::distri->{serial_term_prompt} = $serial_term_prompt;
 }
 
