@@ -21,7 +21,7 @@
   </add-on>
   <bootloader t="map">
     <global t="map">
-      <append>hvc_iucv=8 TERM=dumb security=apparmor crashkernel=220M mitigations=auto</append>
+      <append>hvc_iucv=8 TERM=dumb security=apparmor crashkernel=220M mitigations=auto blog.enable=0</append>
       <cpu_mitigations>auto</cpu_mitigations>
       <gfxmode>auto</gfxmode>
       <hiddenmenu>false</hiddenmenu>
